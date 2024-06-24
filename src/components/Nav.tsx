@@ -67,9 +67,9 @@ function Nav() {
         <div className="navbar-end">
           {
             session.status === 'authenticated'?
-            <div onClick={() => signOut()} className="bg-blue-500 px-3 py-2 text-white rounded-xl cursor-pointer" >Log out</div>
+            <div onClick={() => signOut()} className="bg-blue-700 px-5 py-2 text-white rounded-2xl cursor-pointer" >Log out</div>
             :
-            <Link className="bg-blue-500 px-3 py-2 text-white rounded-xl" href={'/login'}>Sign In</Link>
+            <Link className="bg-blue-700 px-5 py-2 text-white rounded-2xl" href={'/login'}>Sign In</Link>
           }
         </div>
       </div>
