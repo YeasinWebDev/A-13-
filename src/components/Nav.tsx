@@ -4,10 +4,10 @@ import Link from "next/link";
 
 function Nav() {
   const session = useSession()
-  console.log(session)
+  console.log(session.data)
   return (
     <div>
-      <div className="navbar bg-gray-300 px-10">
+      <div className="navbar bg-gray-300 md:px-10">
         <div className="navbar-start">
           <div className="dropdown">
             <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
@@ -34,7 +34,7 @@ function Nav() {
                 {navItems.map((item, index) => {
                   return (
                     <Link
-                      className="font-semibold border-2 p-2 rounded-xl hover:text-primary duration-300"
+                      className="font-bold text-lg border-2 border-black p-2 rounded-xl hover:text-primary duration-300"
                       key={index}
                       href={item.path}
                     >
@@ -53,7 +53,7 @@ function Nav() {
               {navItems.map((item, index) => {
                 return (
                   <Link
-                    className="font-semibold hover:text-primary duration-300"
+                    className="font-bold text-lg hover:text-primary duration-300"
                     key={index}
                     href={item.path}
                   >
@@ -67,9 +67,12 @@ function Nav() {
         <div className="navbar-end">
           {
             session.status === 'authenticated'?
-            <div onClick={() => signOut()} className="bg-blue-700 px-5 py-2 text-white rounded-2xl cursor-pointer" >Log out</div>
+            <>
+            <h1 className="font-semibold md:pr-4 pr-1">{session?.data?.user?.name}</h1>
+            <div onClick={() => signOut()} className="bg-purple-900 px-5 py-2 text-white rounded-2xl cursor-pointer" >Log out</div>
+            </>
             :
-            <Link className="bg-blue-700 px-5 py-2 text-white rounded-2xl" href={'/login'}>Sign In</Link>
+            <Link className="bg-purple-900 px-5 py-2 text-white rounded-2xl" href={'/login'}>Sign In</Link>
           }
         </div>
       </div>
