@@ -1,5 +1,6 @@
 "use client";
 import Loader from "@/components/Loader";
+import RelatedEvents from "@/components/events/RelatedEvents";
 import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
@@ -20,8 +21,6 @@ function Page() {
       console.error("Failed to fetch event", error);
     }
   };
-
-  console.log(event);
 
   useEffect(() => {
     if (id) {
@@ -85,8 +84,11 @@ function Page() {
         <Loader/>
       )}
 
-      <div>
-
+      <div className=" w-[80vw] mx-auto mt-10">
+          <h1 className="font-semibold text-4xl">Related Events</h1>
+          <div className="mt-10">
+            <RelatedEvents category ={event?.category!?.tag} name={event?.name!}/>
+          </div>
       </div>
     </div>
   );

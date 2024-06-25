@@ -4,7 +4,7 @@ import Link from "next/link";
 
 function Nav() {
   const session = useSession()
-  console.log(session.data)
+  // console.log(session.data)
   return (
     <div>
       <div className="navbar bg-gray-300 md:px-10">
