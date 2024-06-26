@@ -24,7 +24,7 @@ function RelatedEvents({ category, name }: category) {
   return (
     <div>
       <div className="flex items-center gap-10 flex-wrap">
-        {filterEvents ? (
+        {filterEvents.length >0 ? (
           filterEvents.map((event:Event) => (
             <Link key={event?._id} href={`/events/${event?._id}`}>
               <div className="card card-compact bg-base-100 w-96 shadow-xl cursor-pointer">

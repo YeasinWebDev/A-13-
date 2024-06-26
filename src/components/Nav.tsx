@@ -45,7 +45,7 @@ function Nav() {
               </div>
             </ul>
           </div>
-          <Link className="font-semibold text-lg" href={'/'}>PlanPro</Link>
+          <Link className="font-semibold text-2xl" href={'/'}>ProPlaner</Link>
         </div>
         <div className="navbar-center hidden lg:flex">
           <ul className="menu menu-horizontal px-1">

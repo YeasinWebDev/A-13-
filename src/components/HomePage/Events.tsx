@@ -7,40 +7,55 @@ import Loader from "../Loader";
 function Events() {
   const [events, setEvents] = useState<Event[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [loade, setLoade] = useState(false)
-  const [filter, setfilter] = useState('')
+  const [filter, setFilter] = useState<string>("");
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<number>(1);
+  const eventsPerPage = 6;
 
-  const getData = async () => {
-    const data = await axios.get("/events/api");
-    setEvents(data.data.events);
-  };
   useEffect(() => {
-    getData();
-  }, [loade]);
+    fetchData();
+  }, [currentPage, filter]);
+
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(`/events/api`, {
+        params: {
+          page: currentPage,
+          limit: eventsPerPage,
+          filter: filter,
+        },
+      });
+      const { events: fetchedEvents, totalPages: fetchedTotalPages } =
+        response.data;
+      setEvents(fetchedEvents);
+      setTotalPages(fetchedTotalPages);
+    } catch (error) {
+      console.error("Error fetching events:", error);
+    }
+  };
 
   const handleSearch = () => {
-    setfilter(searchQuery)
-    const filtered = events.filter((event) =>
-      event.name.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-    setEvents(filtered);
-    setSearchQuery('')
+    setFilter(searchQuery.toLowerCase());
+    setCurrentPage(1); 
   };
 
-  const handeldelete =() =>{
-    setfilter('')
-    setLoade(!loade)
-  }
+  const handleDeleteFilter = () => {
+    setFilter("");
+    setCurrentPage(1);
+  };
+
+  const handlePageChange = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+  };
 
   return (
-    <div className=" py-10 flex-col items-center md:px-20">
+    <div className="py-10 flex-col items-center md:px-20">
       <div className="xl:pl-48">
-        <h1 className="font-bold text-4xl py-5 ">
-          Trusted by <br /> Thousand of Events
+        <h1 className="font-bold text-4xl py-5">
+          Trusted by <br /> Thousands of Events
         </h1>
         <div className="">
-          <div className="py-3 ">
-            {/* search bar */}
+          <div className="py-3">
             <input
               type="text"
               placeholder="Search events..."
@@ -54,17 +69,26 @@ function Events() {
             >
               Search
             </button>
-              <div>{filter &&<h1 className="flex items-center gap-5 font-semibold bg-[#D1D5DB] w-fit rounded-xl px-3 py-2 ">{filter} 
-                <span onClick={handeldelete} className="cursor-pointer rounded-full w-6 h-6 flex items-center justify-center bg-red-600 text-white">X</span></h1>}</div>
+            {filter && (
+              <h1 className="flex items-center gap-5 font-semibold bg-[#D1D5DB] w-fit rounded-xl px-3 py-2">
+                {filter}
+                <span
+                  onClick={handleDeleteFilter}
+                  className="cursor-pointer rounded-full w-6 h-6 flex items-center justify-center bg-red-600 text-white"
+                >
+                  X
+                </span>
+              </h1>
+            )}
           </div>
-          {/* filter by category */}
         </div>
       </div>
+
       <div className="flex items-center justify-center gap-10 flex-wrap">
-        {events ? (
+        {events.length > 0 ? (
           events.map((event) => (
-            <Link href={`/events/${event?._id}`}>
-              <div className="card card-compact bg-base-100 w-96 shadow-xl cursor-pointer">
+            <Link key={event._id} href={`/events/${event._id}`}>
+              <div className="card card-compact w-80 shadow-xl cursor-pointer">
                 <figure>
                   <div className="h-[30vh] w-full">
                     <img
@@ -77,22 +101,22 @@ function Events() {
                 <div className="card-body">
                   <div className="flex items-center gap-5">
                     <h3 className="bg-green-200 px-3 py-1 rounded-xl w-fit text-green-700 font-semibold">
-                      {event?.price === 0 ? "Free" : `$${event?.price}`}
+                      {event.price === 0 ? "Free" : `$${event.price}`}
                     </h3>
                     <h3 className="bg-gray-200 px-3 py-1 rounded-xl w-fit text-gray-600 font-semibold">
-                      {event?.category?.tag}
+                      {event.category.tag}
                     </h3>
                   </div>
 
                   <h3 className="font-semibold pt-5">
-                    Start: <span>{event?.startDate}</span>
+                    Start: <span>{event.startDate}</span>
                   </h3>
-                  <h3 className="font-bold py-5 text-2xl">
-                    <span>{event?.name}</span>
+                  <h3 className="font-bold py-5 text-xl">
+                    <span>{event.name}</span>
                   </h3>
 
-                  <h3 className="font-bold pt-5 text-sm">
-                    by:<span className="text-green-600"> {event?.by}</span>
+                  <h3 className="font-bold pt-3 text-sm">
+                    by:<span className="text-green-600"> {event.by}</span>
                   </h3>
                 </div>
               </div>
@@ -101,10 +125,30 @@ function Events() {
         ) : (
           <Loader />
         )}
+
+        {/* Pagination */}
+        <div className="mt-10 flex justify-center w-full">
+          {totalPages > 1 && (
+            <div className="flex">
+              {Array.from({ length: totalPages }, (_, index) => (
+                <button
+                  key={index}
+                  onClick={() => handlePageChange(index + 1)}
+                  className={`px-4 py-2 mx-1 bg-purple-700 text-white rounded ${
+                    currentPage === index + 1 ? "bg-purple-900" : ""
+                  }`}
+                >
+                  {index + 1}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
 }
+
 interface Event {
   _id: string;
   image: string;
@@ -116,4 +160,5 @@ interface Event {
   name: string;
   by: string;
 }
+
 export default Events;
