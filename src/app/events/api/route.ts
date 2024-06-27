@@ -2,7 +2,6 @@ import { connectDb } from "@/lib/conectDb";
 import { NextResponse } from "next/server";
 
 export async function GET(req: Request) {
-  console.log(req.url)
   try {
     const db = await connectDb();
     if (!db) {

@@ -15,7 +15,7 @@ export const POST = async (request:Response) =>{
         }
 
         const eventsCollection = await db.collection('events')
-        const events = await eventsCollection.find({'category.tag' : category}).toArray()
+        const events = await eventsCollection.find({'category' : category}).toArray()
         return  NextResponse.json({events}, {status: 200})
 
     } catch (error) {

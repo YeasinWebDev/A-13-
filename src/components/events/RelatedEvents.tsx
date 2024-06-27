@@ -11,7 +11,6 @@ function RelatedEvents({ category, name }: category) {
     const data = await axios.post("/events/relatedEvents", { category });
     setevents(data?.data?.events);
   };
-  console.log(events);
 
   useEffect(() => {
     if (category) {
@@ -27,7 +26,7 @@ function RelatedEvents({ category, name }: category) {
         {filterEvents.length >0 ? (
           filterEvents.map((event:Event) => (
             <Link key={event?._id} href={`/events/${event?._id}`}>
-              <div className="card card-compact bg-base-100 w-96 shadow-xl cursor-pointer">
+              <div className="card card-compact bg-base-100 w-80 shadow-xl cursor-pointer">
                 <figure>
                   <div className="h-[30vh] w-full">
                     <img
@@ -43,7 +42,7 @@ function RelatedEvents({ category, name }: category) {
                       {event?.price === 0 ? "Free" : `$${event?.price}`}
                     </h3>
                     <h3 className="bg-gray-200 px-3 py-1 rounded-xl w-fit text-gray-600 font-semibold">
-                      {event?.category?.tag}
+                      {event?.category}
                     </h3>
                   </div>
 
@@ -78,9 +77,7 @@ interface Event {
   _id: string;
   image: string;
   price: number;
-  category: {
-    tag: string;
-  };
+  category: string;
   startDate: string;
   name: string;
   by: string;

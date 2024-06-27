@@ -104,7 +104,7 @@ function Events() {
                       {event.price === 0 ? "Free" : `$${event.price}`}
                     </h3>
                     <h3 className="bg-gray-200 px-3 py-1 rounded-xl w-fit text-gray-600 font-semibold">
-                      {event.category.tag}
+                      {event.category}
                     </h3>
                   </div>
 
@@ -153,9 +153,7 @@ interface Event {
   _id: string;
   image: string;
   price: number;
-  category: {
-    tag: string;
-  };
+  category: string;
   startDate: string;
   name: string;
   by: string;

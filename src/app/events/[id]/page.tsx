@@ -31,11 +31,11 @@ function Page() {
   return (
     <div className="py-10">
       {event ? (
-        <div className="flex flex-col md:flex-row items-center justify-center gap-10">
+        <div className="flex flex-col lg:flex-row items-center justify-center gap-10">
           <div className="rounded-xl">
             <Image className="rounded-xl" src={event?.image} width={500} height={500} alt="" />
           </div>
-          <div className="w-[40%]">
+          <div className="lg:w-[40%] md:w-[60%] w-[90%]">
             <h1 className="font-bold lg:text-5xl text-2xl">{event?.name}</h1>
 
             <div className="flex items-center gap-5 py-5 ">
@@ -43,7 +43,7 @@ function Page() {
                 {event?.price === 0 ? "Free" : `$${event?.price}`}
               </h3>
               <h3 className="bg-gray-200 px-3 py-1 rounded-xl w-fit text-gray-600 font-semibold">
-                {event?.category?.tag}
+                {event?.category}
               </h3>
               <h3 className="font-bold text-sm flex ">
                 by:<span className="text-green-600"> {event?.by}</span>
@@ -87,7 +87,7 @@ function Page() {
       <div className=" w-[80vw] mx-auto mt-10">
           <h1 className="font-semibold text-4xl">Related Events</h1>
           <div className="mt-10">
-            <RelatedEvents category ={event?.category!?.tag} name={event?.name!}/>
+            <RelatedEvents category ={event?.category!} name={event?.name!}/>
           </div>
       </div>
     </div>
@@ -98,9 +98,7 @@ interface Event {
   _id: string;
   image: string;
   price: number;
-  category: {
-    tag: string;
-  };
+  category: string;
   startDate: string;
   name: string;
   by: string;

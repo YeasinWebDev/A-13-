@@ -34,7 +34,7 @@ function Nav() {
                 {navItems.map((item, index) => {
                   return (
                     <Link
-                      className="font-bold text-lg border-2 border-black p-2 rounded-xl hover:text-primary duration-300"
+                      className="font-bold text-[16px] border-2 border-black p-2 rounded-xl hover:text-primary duration-300"
                       key={index}
                       href={item.path}
                     >
@@ -53,7 +53,7 @@ function Nav() {
               {navItems.map((item, index) => {
                 return (
                   <Link
-                    className="font-bold text-lg hover:text-primary duration-300"
+                    className="font-bold text-[16px] hover:text-primary duration-300"
                     key={index}
                     href={item.path}
                   >
@@ -86,8 +86,8 @@ const navItems = [
     path: "/",
   },
   {
-    title: "Event",
-    path: "/event",
+    title: "Create Event",
+    path: "/createEvent",
   },
 ];
 
