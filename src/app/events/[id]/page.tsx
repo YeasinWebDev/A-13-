@@ -9,6 +9,7 @@ import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { FaCalendarAlt } from "react-icons/fa";
 import { FaLocationDot } from "react-icons/fa6";
+import { escape } from 'lodash';
 
 function Page() {
   const [event, setEvent] = useState<Event | null>(null);
@@ -37,7 +38,7 @@ function Page() {
             <Image className="rounded-xl" src={event?.image} width={500} height={500} alt="" />
           </div>
           <div className="lg:w-[40%] md:w-[60%] w-[90%]">
-            <h1 className="font-bold lg:text-5xl text-2xl">{event?.name}</h1>
+            <h1 className="font-bold lg:text-5xl text-2xl">{escape(event?.name)}</h1>
 
             <div className="flex items-center gap-5 py-5 ">
               <h3 className="bg-green-200 px-3 py-1 rounded-xl w-fit text-green-700 font-semibold">
