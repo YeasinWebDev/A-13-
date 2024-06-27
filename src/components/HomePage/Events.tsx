@@ -18,7 +18,7 @@ function Events() {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(`/events/api`, {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_Live_URL}/events/api`, {
         params: {
           page: currentPage,
           limit: eventsPerPage,

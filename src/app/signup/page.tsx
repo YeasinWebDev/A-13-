@@ -17,7 +17,7 @@ function SignUpPage() {
       password: (form.elements.namedItem('password') as HTMLInputElement).value,
     }
 
-    const res = await axios.post('/signup/api', newUser)
+    const res = await axios.post(`${process.env.NEXT_PUBLIC_Live_URL}/signup/api`, newUser)
     if (res.status === 200) {
       form.reset()
       router.push("/login")

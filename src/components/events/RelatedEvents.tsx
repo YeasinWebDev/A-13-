@@ -8,7 +8,7 @@ function RelatedEvents({ category, name }: category) {
   const [events, setevents] = useState([]);
 
   const relatedEvents = async () => {
-    const data = await axios.post("/events/relatedEvents", { category });
+    const data = await axios.post(`${process.env.NEXT_PUBLIC_Live_URL}/events/relatedEvents`, { category });
     setevents(data?.data?.events);
   };
 

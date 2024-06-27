@@ -12,7 +12,7 @@ import { useRouter } from "next/navigation";
 
 function EventForm({ type }) {
   const session = useSession();
-  const router= useRouter()
+  const router = useRouter();
   const [selectedImage, setSelectedImage] = useState(null);
   const [startDateValue, setStartDateValue] = useState<Date | null>(new Date());
   const [endDateValue, setEndDateVaule] = useState<Date | null>(new Date());
@@ -40,7 +40,7 @@ function EventForm({ type }) {
     setIsModalOpen(false);
   };
 
-  const handelSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
+  const handelSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.currentTarget;
     const name = (form.elements.namedItem("name") as HTMLInputElement).value;
@@ -70,13 +70,15 @@ function EventForm({ type }) {
       price: priceData,
       by,
       image,
-    }; 
-    const res = await axios.post(`${process.env.NEXT_PUBLIC_Live_URL}/createEvent/api`, data)
-   
-    if(res){
-      router.push(`/`)
-    }
+    };
+    const res = await axios.post(
+      `${process.env.NEXT_PUBLIC_Live_URL}/createEvent/api`,
+      data
+    );
 
+    if (res) {
+      router.push(`/`);
+    }
   };
 
   return (
@@ -160,7 +162,8 @@ function EventForm({ type }) {
         <div className="flex items-center flex-col md:flex-row justify-center gap-5 pt-5">
           <div className="flex items-center gap-4 w-full bg-[#f2f2f2] px-4 py-2 rounded-xl">
             <div className="flex items-center gap-2 text-gray-500">
-              <FaCalendarAlt size={16}/> <h1 className="text-sm flex-nowrap">Start Date:</h1>
+              <FaCalendarAlt size={16} />{" "}
+              <h1 className="text-sm flex-nowrap">Start Date:</h1>
             </div>
             <DatePicker
               selected={startDateValue}
@@ -175,7 +178,8 @@ function EventForm({ type }) {
           </div>
           <div className="w-full flex items-center gap-4 bg-[#f2f2f2] px-4 py-2 rounded-xl">
             <div className="flex   items-center gap-2 text-gray-500">
-              <FaCalendarAlt size={16}/> <h1 className="text-sm flex-nowrap">End Date:</h1>
+              <FaCalendarAlt size={16} />{" "}
+              <h1 className="text-sm flex-nowrap">End Date:</h1>
             </div>
             <DatePicker
               selected={endDateValue}
@@ -238,7 +242,7 @@ function EventForm({ type }) {
 
 // Function to format date and time
 const formatDateTime = (date: Date) => {
-  const options:Intl.DateTimeFormatOptions = {
+  const options: Intl.DateTimeFormatOptions = {
     weekday: "short",
     day: "numeric",
     month: "short",

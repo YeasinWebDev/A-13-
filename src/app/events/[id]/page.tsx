@@ -1,4 +1,5 @@
 "use client";
+import GetTicket from "@/components/GetTicket";
 import Loader from "@/components/Loader";
 import RelatedEvents from "@/components/events/RelatedEvents";
 import axios from "axios";
@@ -15,7 +16,7 @@ function Page() {
 
   const getEvent = async (id: string) => {
     try {
-      const res = await axios.post("/events/oneEvent", { id });
+      const res = await axios.post(`${process.env.NEXT_PUBLIC_Live_URL}/events/oneEvent`, { id });
       setEvent(res.data);
     } catch (error) {
       console.error("Failed to fetch event", error);
@@ -49,13 +50,7 @@ function Page() {
                 by:<span className="text-green-600"> {event?.by}</span>
               </h3>
             </div>
-
-            <Link
-              className="bg-purple-900 px-5 py-2 text-white rounded-2xl"
-              href={""}
-            >
-              Get Ticket
-            </Link>
+            <GetTicket event={event}/>
 
             <h3 className="flex items-center pt-8 pb-2 gap-4">
               <div className="text-purple-900">
