@@ -20,7 +20,7 @@ function GetTicket({ event }: Event) {
         "Order canceled -- continue to shop around and checkout when you’re ready."
       );
     }
-  }, []);
+  }, [session?.data]);
 
   const oncheckOut = async() => {
     const order= {
