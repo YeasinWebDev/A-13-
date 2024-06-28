@@ -18,13 +18,16 @@ function Events() {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(`${process.env.NEXT_PUBLIC_Live_URL}/events/api`, {
-        params: {
-          page: currentPage,
-          limit: eventsPerPage,
-          filter: filter,
-        },
-      });
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_Live_URL}/events/api`,
+        {
+          params: {
+            page: currentPage,
+            limit: eventsPerPage,
+            filter: filter,
+          },
+        }
+      );
       const { events: fetchedEvents, totalPages: fetchedTotalPages } =
         response.data;
       setEvents(fetchedEvents);
@@ -36,7 +39,7 @@ function Events() {
 
   const handleSearch = () => {
     setFilter(searchQuery.toLowerCase());
-    setCurrentPage(1); 
+    setCurrentPage(1);
   };
 
   const handleDeleteFilter = () => {
@@ -86,9 +89,9 @@ function Events() {
 
       <div className="flex items-center justify-center gap-10 flex-wrap">
         {events.length > 0 ? (
-          events.map((event) => (
-            <Link key={event._id} href={`${process.env.NEXT_PUBLIC_Live_URL}/events/${event._id}`}>
-              <div className="card card-compact w-80 shadow-xl cursor-pointer">
+          events?.map((event) => (
+            <div key={event._id} className="card card-compact w-80 shadow-xl cursor-pointer">
+              <Link href={`/events/${event._id}`}>
                 <figure>
                   <div className="h-[30vh] w-full">
                     <img
@@ -119,8 +122,8 @@ function Events() {
                     by:<span className="text-green-600"> {event.by}</span>
                   </h3>
                 </div>
-              </div>
-            </Link>
+              </Link>
+            </div>
           ))
         ) : (
           <Loader />
