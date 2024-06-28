@@ -17,7 +17,7 @@ function Page() {
 
   const getEvent = async (id: string) => {
     try {
-      const res = await axios.post(`${process.env.NEXT_PUBLIC_Live_URL}/events/oneEvent`, { id });
+      const res = await axios.post(`/events/oneEvent`, { id });
       setEvent(res.data);
     } catch (error) {
       console.error("Failed to fetch event", error);
