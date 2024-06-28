@@ -87,7 +87,7 @@ function Events() {
       <div className="flex items-center justify-center gap-10 flex-wrap">
         {events.length > 0 ? (
           events.map((event) => (
-            <Link key={event._id} href={`/events/${event._id}`}>
+            <Link key={event._id} href={`${process.env.NEXT_PUBLIC_Live_URL}/events/${event._id}`}>
               <div className="card card-compact w-80 shadow-xl cursor-pointer">
                 <figure>
                   <div className="h-[30vh] w-full">
