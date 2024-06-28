@@ -30,6 +30,10 @@ function Page() {
     }
   }, [id]);
 
+  const sanitizeEventName = (name: string | undefined) => {
+    return name ? escape(name.replace(/'/g, "&apos;")) : "";
+  };
+
   return (
     <div className="py-10">
       {event ? (
@@ -38,7 +42,7 @@ function Page() {
             <Image className="rounded-xl" src={event?.image} width={500} height={500} alt="" />
           </div>
           <div className="lg:w-[40%] md:w-[60%] w-[90%]">
-            <h1 className="font-bold lg:text-5xl text-2xl">{escape(event?.name)}</h1>
+            <h1 className="font-bold lg:text-5xl text-2xl" dangerouslySetInnerHTML={{ __html: sanitizeEventName(event?.name) }}></h1>
 
             <div className="flex items-center gap-5 py-5 ">
               <h3 className="bg-green-200 px-3 py-1 rounded-xl w-fit text-green-700 font-semibold">
@@ -48,7 +52,7 @@ function Page() {
                 {event?.category}
               </h3>
               <h3 className="font-bold text-sm flex ">
-                by:<span className="text-green-600"> {event?.by}</span>
+                by:<span className="text-green-600" dangerouslySetInnerHTML={{ __html: sanitizeEventName(event?.by) }}></span>
               </h3>
             </div>
             <GetTicket event={event}/>
@@ -66,13 +70,11 @@ function Page() {
               <div className="text-purple-900">
                 <FaLocationDot />
               </div>
-              <span className="font-semibold">
-              {event?.location}
-              </span>
+              <span className="font-semibold" dangerouslySetInnerHTML={{ __html: sanitizeEventName(event?.location) }}></span>
             </h3>
 
             <h3 className="font-bold pt-5 text-xl ">
-             What You'll Learn: <br /> <span className="font-semibold text-lg">{event?.description}</span>
+              What You'll Learn: <br /> <span className="font-semibold text-lg" dangerouslySetInnerHTML={{ __html: sanitizeEventName(event?.description) }}></span>
             </h3>
           </div>
         </div>
@@ -101,6 +103,7 @@ interface Event {
   endDate:string;
   location:string;
   description:string;
+  eventId: string;
 }
 
 export default Page;

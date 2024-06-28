@@ -10,7 +10,7 @@ import { useSession } from "next-auth/react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 
-function EventForm({ type }) {
+function EventForm({ type }:EventFormProps) {
   const session = useSession();
   const router = useRouter();
   const [selectedImage, setSelectedImage] = useState(null);
@@ -255,6 +255,6 @@ const formatDateTime = (date: Date) => {
 
 export default EventForm;
 
-type type = {
+type EventFormProps = {
   type: "Create" | "Update";
 };

@@ -1,11 +1,10 @@
 
 import { connectDb } from "@/lib/conectDb";
 import { ObjectId } from "mongodb";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export const POST = async (request:{ json: () => Promise<{ id: string }> }) => {
-  const { id } = await request.json();  // Parse the JSON body to get the ID
-  console.log('Received ID:', id);
+export const POST = async (request:NextRequest) => {
+  const { id } = await request.json(); 
 
   try {
     const db = await connectDb();

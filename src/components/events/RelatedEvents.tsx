@@ -3,13 +3,18 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import Loader from "../Loader";
 import Link from "next/link";
+import { escape } from 'lodash';
 
 function RelatedEvents({ category, name }: category) {
-  const [events, setevents] = useState([]);
+  const [events, setevents] = useState<Event[]>([]);
 
   const relatedEvents = async () => {
-    const data = await axios.post(`${process.env.NEXT_PUBLIC_Live_URL}/events/relatedEvents`, { category });
-    setevents(data?.data?.events);
+    try {
+      const { data } = await axios.post(`${process.env.NEXT_PUBLIC_Live_URL}/events/relatedEvents`, { category });
+      setevents(data?.data?.events);
+    } catch (error) {
+      console.error("Failed to fetch related events", error);
+    }
   };
 
   useEffect(() => {
@@ -20,20 +25,18 @@ function RelatedEvents({ category, name }: category) {
 
   const filterEvents = events?.filter((event: Event) => event?.name !== name);
 
+  const sanitize = (text: string | undefined) => text ? escape(text.replace(/'/g, "&apos;")) : "";
+
   return (
     <div>
       <div className="flex items-center gap-10 flex-wrap">
-        {filterEvents.length >0 ? (
-          filterEvents.map((event:Event) => (
+        {filterEvents.length > 0 ? (
+          filterEvents.map((event: Event) => (
             <Link key={event?._id} href={`/events/${event?._id}`}>
               <div className="card card-compact bg-base-100 w-80 shadow-xl cursor-pointer">
                 <figure>
                   <div className="h-[30vh] w-full">
-                    <img
-                      className="w-full h-full"
-                      src={event.image}
-                      alt="event"
-                    />
+                    <img className="w-full h-full" src={event.image} alt="event" />
                   </div>
                 </figure>
                 <div className="card-body">
@@ -45,16 +48,12 @@ function RelatedEvents({ category, name }: category) {
                       {event?.category}
                     </h3>
                   </div>
-
                   <h3 className="font-semibold pt-5">
                     Start: <span>{event?.startDate}</span>
                   </h3>
-                  <h3 className="font-bold py-5 text-2xl">
-                    <span>{event?.name}</span>
-                  </h3>
-
+                  <h3 className="font-bold py-5 text-2xl" dangerouslySetInnerHTML={{ __html: sanitize(event?.name) }}></h3>
                   <h3 className="font-bold pt-5 text-sm">
-                    by:<span className="text-green-600"> {event?.by}</span>
+                    by:<span className="text-green-600" dangerouslySetInnerHTML={{ __html: sanitize(event?.by) }}></span>
                   </h3>
                 </div>
               </div>

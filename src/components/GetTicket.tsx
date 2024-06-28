@@ -2,11 +2,15 @@
 import React, { useEffect } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 import { useSession } from "next-auth/react";
-import { checkoutOrder } from "@/app/checkoutorder/route";
+import { checkoutOrder } from "@/app/checkoutorder/checkout";
 
 loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
-function GetTicket({ event }: Event) {
+type Props = {
+  event: Event; // Define the event prop here
+};
+
+function GetTicket({ event }: Props) {
   const session = useSession()
   useEffect(() => {
     // Check to see if this is a redirect back from Checkout
@@ -27,7 +31,7 @@ function GetTicket({ event }: Event) {
       eventId: event?.eventId,
       eventName: event?.name,
       eventPrice: event?.price,
-      buyer: session?.data!.user?.email
+      buyer: session?.data!.user?.email || ''
     }
     checkoutOrder(order)
   };

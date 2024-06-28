@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import AuthProvider from "@/services/AuthProvider";
 import Nav from "@/components/Nav";
+import { Suspense } from "react";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -17,12 +18,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" data-theme='light'>
+    <html lang="en" data-theme="light">
       <body className={inter.className}>
         <AuthProvider>
-          <Nav/>
-          {children}
-          </AuthProvider>
+          <Suspense>
+            <Nav />
+            {children}
+          </Suspense>
+        </AuthProvider>
       </body>
     </html>
   );

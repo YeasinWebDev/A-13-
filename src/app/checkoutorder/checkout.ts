@@ -1,14 +1,15 @@
 
 import Stripe from "stripe";
 
-export const checkoutOrder = async (order: Order) => {
+export const checkoutOrder = async (order: Order): Promise<void> => {
   
-  const liveUrl = process.env.NEXT_PUBLIC_Live_URL; 
+  const liveUrl:string = process.env.NEXT_PUBLIC_Live_URL || ''; 
   const stripe = new Stripe(process.env.NEXT_PUBLIC_STRIPE_SECRET_KEY!);
   const price = Number(order.eventPrice) * 100;
   
   try {
     const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
       line_items: [
         {
           price_data: {

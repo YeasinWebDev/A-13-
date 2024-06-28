@@ -1,7 +1,7 @@
 import { connectDb } from "@/lib/conectDb"
-import { NextResponse } from "next/server"
+import { NextRequest, NextResponse } from "next/server"
 
-export const POST = async (request:Response) =>{
+export const POST = async (request:NextRequest) =>{
     const {category} = await request.json()
     console.log(category)
 
