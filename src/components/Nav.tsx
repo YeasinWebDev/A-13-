@@ -89,6 +89,10 @@ const navItems = [
     title: "Create Event",
     path: "/createEvent",
   },
+  {
+    title: "My Profile",
+    path: "/profile",
+  },
 ];
 
 export default Nav;

@@ -11,7 +11,7 @@ function RelatedEvents({ category, name }: category) {
   const relatedEvents = async () => {
     try {
       const { data } = await axios.post(`${process.env.NEXT_PUBLIC_Live_URL}/events/relatedEvents`, { category });
-      setevents(data?.data?.events);
+      setevents(data?.events);
     } catch (error) {
       console.error("Failed to fetch related events", error);
     }
@@ -30,7 +30,7 @@ function RelatedEvents({ category, name }: category) {
   return (
     <div>
       <div className="flex items-center gap-10 flex-wrap">
-        {filterEvents.length > 0 ? (
+        {filterEvents?.length > 0 ? (
           filterEvents.map((event: Event) => (
             <Link key={event?._id} href={`/events/${event?._id}`}>
               <div className="card card-compact bg-base-100 w-80 shadow-xl cursor-pointer">
@@ -60,7 +60,7 @@ function RelatedEvents({ category, name }: category) {
             </Link>
           ))
         ) : (
-          <Loader />
+          <h1 className="font-semibold ">No Event Found</h1>
         )}
       </div>
     </div>
