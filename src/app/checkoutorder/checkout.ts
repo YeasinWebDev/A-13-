@@ -15,7 +15,7 @@ export const checkoutOrder = async (order: Order): Promise<void> => {
           price_data: {
             currency: "usd",
             product_data: {
-              name: order?.eventName,
+              name: order.eventName,
             },
             unit_amount: price,
           },
@@ -23,8 +23,8 @@ export const checkoutOrder = async (order: Order): Promise<void> => {
         },
       ],
       metadata: {
-        eventId: order?.eventId,
-        buyer: order?.buyer,
+        eventId: order.eventId,
+        buyer: order.buyer,
       },
       mode: "payment",
       success_url: `${liveUrl}/profile`,
@@ -32,8 +32,8 @@ export const checkoutOrder = async (order: Order): Promise<void> => {
     });
     
     
-    if (session && session?.url) {
-      window.location.href = session?.url;
+    if (session && session.url) {
+      window.location.href = session.url;
     } else {
       console.error('Session URL not found in session object:', session);
     }

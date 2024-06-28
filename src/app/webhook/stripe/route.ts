@@ -1,6 +1,7 @@
 import stripe from 'stripe'
 import { NextResponse } from 'next/server'
 import { connectDb } from '@/lib/conectDb'
+// const stripe = new Stripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
 export async function POST(request: Request) {
   const body = await request.text()
@@ -31,11 +32,11 @@ export async function POST(request: Request) {
       createdAt: new Date(),
     }
 
-    const db = await connectDb();
-    const ordersCollection = await db!.collection('orders');
+    // const db = await connectDb();
+    // const ordersCollection = await db!.collection('orders');
 
-    const newOrder = await ordersCollection.insertOne(order);
-    return NextResponse.json({ message: 'OK', order: newOrder })
+    // const newOrder = await ordersCollection.insertOne(order);
+    return NextResponse.json({ message: 'OK', order })
   }
 
   return new Response('', { status: 200 })
