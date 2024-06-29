@@ -3,12 +3,15 @@ import { NextResponse } from "next/server";
 import { headers } from "next/headers";
 
 // Initialize Stripe with your secret key
-const stripe = new Stripe(process.env.NEXT_PUBLIC_STRIPE_SECRET_KEY!);
+const stripe = new Stripe(process.env.NEXT_PUBLIC_STRIPE_SECRET_KEY!,{
+  apiVersion:'2024-06-20',
+  typescript:true
+});
 
 export async function POST(request: Request) {
   
   const body = await request.text();
-  const sig = headers().get("stripe-signature") as string;
+  const sig = request.headers.get("stripe-signature") as string
   const endpointSecret = process.env.NEXT_PUBLIC_STRIPE_WEBHOOK_SECRET!;
 
   let event: Stripe.Event;
