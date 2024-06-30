@@ -1,23 +1,23 @@
 import Stripe from "stripe";
 import { NextResponse } from "next/server";
 import { headers } from "next/headers";
+import { connectDb } from "@/lib/conectDb";
 
 // Initialize Stripe with your secret key
-const stripe = new Stripe(process.env.NEXT_PUBLIC_STRIPE_SECRET_KEY!,{
-  apiVersion:'2024-06-20',
-  typescript:true
+const stripe = new Stripe(process.env.NEXT_PUBLIC_STRIPE_SECRET_KEY!, {
+  apiVersion: "2024-06-20",
+  typescript: true,
 });
 
 export async function POST(request: Request) {
-  
   const body = await request.text();
-  const sig = request.headers.get("stripe-signature") as string
+  const signatures = headers().get("stripe-signature") as string;
   const endpointSecret = process.env.NEXT_PUBLIC_STRIPE_WEBHOOK_SECRET!;
 
   let event: Stripe.Event;
 
   try {
-    event = stripe.webhooks.constructEvent(body, sig, endpointSecret);
+    event = stripe.webhooks.constructEvent(body, signatures, endpointSecret);
   } catch (err: any) {
     console.log(`❌ Error message: ${err.message}`);
     return new Response(`Webhook Error: ${err.message}`, { status: 200 });
@@ -38,9 +38,14 @@ export async function POST(request: Request) {
       createdAt: new Date(),
     };
 
-    // Implement database logic or other actions here
+    const db = await connectDb();
+    if (!db)
+      return NextResponse.json({ massage: "Database connection failed" });
 
-    return NextResponse.json({ message: "OK", order });
+    const ordersCollection = await db.collection("orders");
+    const newOrder = await ordersCollection.insertOne(order);
+
+    return NextResponse.json({ message: "OK", newOrder });
   }
 
   return new Response("", { status: 200 });
