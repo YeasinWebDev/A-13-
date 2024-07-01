@@ -5,6 +5,8 @@ import axios from "axios";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
+import { MdDeleteOutline } from "react-icons/md";
+import { FaRegEdit } from "react-icons/fa";
 
 function ProfilePage() {
   const [ticket, setTicket] = useState<Event[]>([]);
@@ -32,9 +34,17 @@ function ProfilePage() {
     }
   }, [session]); // Trigger fetch when session changes
 
-
   if (loading) return <Loader />;
-  console.log(postEvents)
+
+  const handelDetele = async (id: string) => {
+    const res = await axios.post(`/api/deleteEvent`, { eventId: id });
+    if (res?.data?.deletedResult?.deletedCount > 0) {
+      getData();
+    }
+  };
+  const handelEdit = (id: string) => {
+    console.log(id);
+  };
 
   return (
     <div className="w-[70vw] mx-auto py-10">
@@ -86,44 +96,58 @@ function ProfilePage() {
             postEvents?.map((event) => (
               <div
                 key={event._id}
-                className="card card-compact w-80 shadow-xl cursor-pointer"
+                className="card card-compact w-96 shadow-xl cursor-pointer"
               >
-                <Link href={`/events/${event._id}`}>
-                  <figure>
-                    <div className="h-[30vh] w-full">
-                      <img
-                        className="w-full h-full"
-                        src={event.image}
-                        alt="event"
-                      />
-                    </div>
-                  </figure>
-                  <div className="card-body">
-                    <div className="flex items-center gap-5">
-                      <h3 className="bg-green-200 px-3 py-1 rounded-xl w-fit text-green-700 font-semibold">
-                        {event.price === 0 ? "Free" : `$${event.price}`}
-                      </h3>
-                      <h3 className="bg-gray-200 px-3 py-1 rounded-xl w-fit text-gray-600 font-semibold">
-                        {event.category}
-                      </h3>
-                    </div>
-
-                    <h3 className="font-semibold pt-5">
-                      Start: <span>{event.startDate}</span>
+                <div className="absolute right-2 flex top-5 items-center justify-center gap-3">
+                  <FaRegEdit
+                    onClick={() => handelEdit(event._id)}
+                    color="green"
+                    size={24}
+                    className="bg-gray-300 w-8 h-8 p-1 rounded-lg"
+                  />
+                  <MdDeleteOutline
+                    onClick={() => handelDetele(event.eventId)}
+                    color="red"
+                    size={24}
+                    className="bg-gray-300 w-8 h-8 p-1 rounded-lg"
+                  />
+                </div>
+                <figure>
+                  <div className="h-[30vh] w-full">
+                    <img
+                      className="w-full h-full rounded-t-xl"
+                      src={event.image}
+                      alt="event"
+                    />
+                  </div>
+                </figure>
+                <div className="card-body">
+                  <div className="flex items-center gap-5">
+                    <h3 className="bg-green-200 px-3 py-1 rounded-xl w-fit text-green-700 font-semibold">
+                      {event.price === 0 ? "Free" : `$${event.price}`}
                     </h3>
-                    <h3 className="font-bold py-5 text-xl">
-                      <span>{event.name}</span>
-                    </h3>
-
-                    <h3 className="font-bold pt-3 text-sm">
-                      by:<span className="text-green-600"> {event.by}</span>
+                    <h3 className="bg-gray-200 px-3 py-1 rounded-xl w-fit text-gray-600 font-semibold">
+                      {event.category}
                     </h3>
                   </div>
-                </Link>
+
+                  <h3 className="font-semibold pt-5">
+                    Start: <span>{event.startDate}</span>
+                  </h3>
+                  <h3 className="font-bold py-5 text-xl">
+                    <span>{event.name}</span>
+                  </h3>
+
+                  <h3 className="font-bold pt-3 text-sm">
+                    by:<span className="text-green-600"> {event.by}</span>
+                  </h3>
+                </div>
               </div>
             ))
           ) : (
-            <h1 className="font-semibold flex items-center justify-center w-full text-xl bg-[#f2f2f2] py-10 rounded-xl">No Event have been created yet</h1>
+            <h1 className="font-semibold flex items-center justify-center w-full text-xl bg-[#f2f2f2] py-10 rounded-xl">
+              No Event have been created yet
+            </h1>
           )}
         </div>
       </div>
@@ -139,6 +163,7 @@ interface Event {
   startDate: string;
   name: string;
   by: string;
+  eventId:string
 }
 
 export default ProfilePage;

@@ -33,7 +33,7 @@ function RelatedEvents({ category, name }: category) {
         {filterEvents?.length > 0 ? (
           filterEvents.map((event: Event) => (
             <Link key={event?._id} href={`/events/${event?._id}`}>
-              <div className="card card-compact bg-base-100 w-80 shadow-xl cursor-pointer">
+              <div className="card card-compact bg-base-100 w-96 shadow-xl cursor-pointer">
                 <figure>
                   <div className="h-[30vh] w-full">
                     <img className="w-full h-full" src={event.image} alt="event" />

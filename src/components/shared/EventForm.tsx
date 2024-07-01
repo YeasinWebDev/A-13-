@@ -9,6 +9,7 @@ import { imageUrl } from "../ImageUrl";
 import { useSession } from "next-auth/react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 function EventForm({ type }:EventFormProps) {
   const session = useSession();
@@ -80,6 +81,7 @@ function EventForm({ type }:EventFormProps) {
 
     if (res) {
       router.push(`/`);
+      toast.success('Event created successfully')
     }
   };
 

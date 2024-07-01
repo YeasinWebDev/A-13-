@@ -4,7 +4,7 @@ import React, { FormEvent } from "react";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import SocialSignin from "@/components/SocialComponent";
-// import SocialSignin from "@/components/SocialCompoenet";
+import toast from "react-hot-toast";
 const LoginPage = () => {
   const router = useRouter();
   const session = useSession();
@@ -24,11 +24,13 @@ const LoginPage = () => {
       redirect: false,
     });
     if (session.status === "authenticated") {
+      toast.success("Login successful")
       router.push("/");
     }
     if (res !== undefined) {
       if (res.status === 200) {
         form.reset();
+      toast.success("Login successful")
         router.push(path ? path : '/');
       }
     }

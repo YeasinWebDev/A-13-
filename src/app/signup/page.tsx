@@ -4,6 +4,7 @@ import axios from 'axios';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React, { FormEvent } from 'react'
+import toast from 'react-hot-toast';
 
 function SignUpPage() {
   const router = useRouter()
@@ -20,6 +21,7 @@ function SignUpPage() {
     const res = await axios.post(`${process.env.NEXT_PUBLIC_Live_URL}/signup/api`, newUser)
     if (res.status === 200) {
       form.reset()
+      toast.success('Please SignIn now')
       router.push("/login")
     }
   };
