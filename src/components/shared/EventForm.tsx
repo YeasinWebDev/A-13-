@@ -56,6 +56,7 @@ function EventForm({ type }:EventFormProps) {
     const price = (form.elements.namedItem("price") as HTMLInputElement).value;
     const free = (form.elements.namedItem("free") as HTMLInputElement)?.checked;
     const by = session?.data?.user?.name;
+    const byEmail = session?.data?.user?.email;
     const image = selectedImage;
 
     const priceData = free ? 0 : price;
@@ -69,6 +70,7 @@ function EventForm({ type }:EventFormProps) {
       endDate,
       price: priceData,
       by,
+      byEmail,
       image,
     };
     const res = await axios.post(

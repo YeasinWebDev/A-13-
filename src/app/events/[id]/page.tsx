@@ -10,29 +10,42 @@ import React, { useEffect, useState } from "react";
 import { FaCalendarAlt } from "react-icons/fa";
 import { FaLocationDot } from "react-icons/fa6";
 import { escape } from 'lodash';
+import { useSession } from "next-auth/react";
 
 function Page() {
   const [event, setEvent] = useState<Event | null>(null);
+  const [eventId, setEventId] = useState<Event[] | null>([]);
+  const session = useSession()
+  const email = session?.data?.user?.email;
+  const [loading, setloading] = useState(false);
   const { id } = useParams();
 
   const getEvent = async (id: string) => {
     try {
+      setloading(true);
       const res = await axios.post(`${process.env.NEXT_PUBLIC_Live_URL}/events/oneEvent`, { id });
       setEvent(res.data);
+      const res2 = await axios.post(`/api/getAllProfile`, {email})
+      setEventId(res2?.data?.events ||[])
+      setloading(false);
     } catch (error) {
       console.error("Failed to fetch event", error);
     }
   };
 
   useEffect(() => {
-    if (id) {
+    if (id && email) {
       getEvent(String(id));
     }
-  }, [id]);
+  }, [id,email]);
+
+  const isPaid = eventId?.some(i => i.eventId === event?.eventId);
 
   const sanitizeEventName = (name: string | undefined) => {
     return name ? escape(name.replace(/'/g, "&apos;")) : "";
   };
+
+  if (loading) return <Loader />;
 
   return (
     <div className="py-10">
@@ -55,7 +68,15 @@ function Page() {
                 by:<span className="text-green-600" dangerouslySetInnerHTML={{ __html: sanitizeEventName(event?.by) }}></span>
               </h3>
             </div>
-            <GetTicket event={event}/>
+            {
+              !isPaid? (
+                <GetTicket event={event} />
+              ) : (
+                <h1 className="w-fit  px-4 py-2  bg-gray-200 text-green-600 rounded-xl font-bold">
+                  You already have a ticket
+                </h1>
+              )
+            }
 
             <h3 className="flex items-center pt-8 pb-2 gap-4">
               <div className="text-purple-900">
@@ -79,7 +100,7 @@ function Page() {
           </div>
         </div>
       ) : (
-        <Loader/>
+        <h1 className="font-semibold ">No Event Found</h1>
       )}
 
       <div className=" w-[80vw] mx-auto mt-10">

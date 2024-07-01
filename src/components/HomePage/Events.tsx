@@ -90,7 +90,7 @@ function Events() {
       <div className="flex items-center justify-center gap-10 flex-wrap">
         {events.length > 0 ? (
           events?.map((event) => (
-            <div key={event._id} className="card card-compact w-80 shadow-xl cursor-pointer">
+            <div key={event._id} className="card card-compact w-96 shadow-xl cursor-pointer">
               <Link href={`/events/${event._id}`}>
                 <figure>
                   <div className="h-[30vh] w-full">

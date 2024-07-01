@@ -85,3 +85,5 @@ type User = {
   password: string;
 }
 export { handler as GET, handler as POST };
+
+export const authOption = handler
