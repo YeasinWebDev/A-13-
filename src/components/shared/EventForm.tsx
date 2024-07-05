@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { FaCalendarAlt, FaDollarSign } from "react-icons/fa";
@@ -10,11 +10,14 @@ import { useSession } from "next-auth/react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import Loader from "../Loader";
 
-function EventForm({ type }:EventFormProps) {
+function EventForm({ type, eventId }: EventFormProps) {
   const session = useSession();
   const router = useRouter();
-  const [selectedImage, setSelectedImage] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [defultValue, setdefultValue] = useState<Partial<Event>>({});
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [startDateValue, setStartDateValue] = useState<Date | null>(new Date());
   const [endDateValue, setEndDateVaule] = useState<Date | null>(new Date());
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -28,6 +31,7 @@ function EventForm({ type }:EventFormProps) {
 
   // img upload
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSelectedImage(null);
     const file = e.target.files && e.target.files[0];
     if (file) {
       const image = await imageUrl(file);
@@ -35,7 +39,7 @@ function EventForm({ type }:EventFormProps) {
     }
   };
 
-  // Add new categorie
+  // Add new category
   const handleAddCategory = (newCategory: string) => {
     setCategories([...categories, newCategory]);
     setIsModalOpen(false);
@@ -58,7 +62,7 @@ function EventForm({ type }:EventFormProps) {
     const free = (form.elements.namedItem("free") as HTMLInputElement)?.checked;
     const by = session?.data?.user?.name;
     const byEmail = session?.data?.user?.email;
-    const image = selectedImage;
+    const image = selectedImage || defultValue.image;
 
     const priceData = free ? 0 : price;
 
@@ -74,16 +78,49 @@ function EventForm({ type }:EventFormProps) {
       byEmail,
       image,
     };
-    const res = await axios.post(
-      `${process.env.NEXT_PUBLIC_Live_URL}/createEvent/api`,
-      data
-    );
 
-    if (res) {
-      router.push(`/`);
-      toast.success('Event created successfully')
+    if (type === "update") {
+      const res = await axios.put(
+        `${process.env.NEXT_PUBLIC_Live_URL}/updateEvent/${eventId}`,
+        data
+      );
+      if (res.status === 200) {
+        toast.success("Event updated successfully");
+        router.push(`/profile`);
+      }
+    } else{
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_Live_URL}/createEvent/api`,
+        data
+      );
+  
+      if (res) {
+        router.push(`/`);
+        toast.success("Event created successfully");
+      }
     }
+
   };
+
+  useEffect(() => {
+    if (type === "update") {
+      setLoading(true);
+      const loadData = async () => {
+        const res = await axios.post(
+          `${process.env.NEXT_PUBLIC_Live_URL}/events/oneEvent`,
+          { id: eventId }
+        );
+        setdefultValue(res.data);
+        setStartDateValue(new Date(res.data.startDate));
+        setEndDateVaule(new Date(res.data.endDate));
+        setSelectedImage(res.data.image);
+        setLoading(false);
+      };
+      loadData();
+    }
+  }, [eventId, type]);
+
+  if (loading) return <Loader />;
 
   return (
     <div className="xl:w-[70vw] lg:w-[75vw] w-[98vw] mx-auto">
@@ -94,6 +131,7 @@ function EventForm({ type }:EventFormProps) {
             placeholder="Event Name"
             type="text"
             name="name"
+            defaultValue={defultValue?.name}
             required
           />
           <div className="flex gap-2 w-full">
@@ -101,6 +139,7 @@ function EventForm({ type }:EventFormProps) {
               className="bg-[#f2f2f2] text-sm px-4 py-2 rounded-xl w-full outline-none"
               name="category"
               required
+              defaultValue={defultValue?.category}
             >
               <option value="" disabled selected>
                 Category
@@ -127,16 +166,25 @@ function EventForm({ type }:EventFormProps) {
             placeholder="Description"
             className="bg-[#f2f2f2] p-3 outline-none rounded-xl w-full resize-none"
             rows={7}
+            defaultValue={defultValue?.description}
             required
           ></textarea>
 
           {selectedImage ? (
             <div className="w-full px-4 py-2 rounded-xl flex flex-col items-center ">
-              <div className="lg:w-[20vw] h-[40vh]">
+              <div className="relative lg:w-[20vw] h-[40vh]">
                 <img
                   src={selectedImage}
                   alt="Uploaded"
                   className="rounded-xl w-full h-full"
+                />
+                <input
+                  className="absolute inset-0 opacity-0 cursor-pointer"
+                  type="file"
+                  id="image"
+                  name="image"
+                  accept="image/*"
+                  onChange={handleImageUpload}
                 />
               </div>
             </div>
@@ -149,7 +197,6 @@ function EventForm({ type }:EventFormProps) {
               </div>
               <input
                 className="absolute inset-0 opacity-0 cursor-pointer"
-                required
                 type="file"
                 id="image"
                 name="image"
@@ -206,6 +253,7 @@ function EventForm({ type }:EventFormProps) {
               placeholder="Event Location"
               type="text"
               name="location"
+              defaultValue={defultValue?.location}
               required
             />
           </div>
@@ -218,6 +266,7 @@ function EventForm({ type }:EventFormProps) {
                 placeholder="Price"
                 type="text"
                 name="price"
+                defaultValue={defultValue?.price}
               />
             </div>
             <div className="flex gap-3 items-center w-full justify-end">
@@ -229,10 +278,9 @@ function EventForm({ type }:EventFormProps) {
 
         <button
           type="submit"
-          className="bg-purple-900  text-white w-full mt-4 py-2 rounded-xl"
+          className="bg-purple-900 text-white w-full mt-4 py-2 rounded-xl"
         >
-          {" "}
-          Create{" "}
+          {type === "update" ? "Update" : "Create"}
         </button>
       </form>
       <CategoryModal
@@ -260,5 +308,21 @@ const formatDateTime = (date: Date) => {
 export default EventForm;
 
 type EventFormProps = {
-  type: "Create" | "Update";
+  type: string;
+  eventId?: string;
 };
+
+interface Event {
+  _id: string;
+  name: string;
+  category: string;
+  description: string;
+  location: string;
+  startDate: string;
+  endDate: string;
+  price: string;
+  by: string;
+  byEmail: string;
+  image: string;
+  eventId: number;
+}

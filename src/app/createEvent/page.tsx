@@ -11,7 +11,7 @@ function CreateEvent() {
       </section>
 
       <div className="wrapper my-6">
-        <EventForm  type="Create" />
+        <EventForm type="create"/>
       </div>
     </>
   );

@@ -7,9 +7,12 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { MdDeleteOutline } from "react-icons/md";
 import { FaRegEdit } from "react-icons/fa";
+import CreateEvent from "../createEvent/page";
+import { useRouter } from "next/navigation";
 
 function ProfilePage() {
   const [ticket, setTicket] = useState<Event[]>([]);
+  const router = useRouter()
   const [postEvents, setPostEvents] = useState<Event[]>([]);
   const [loading, setloading] = useState(false);
   const session = useSession();
@@ -36,14 +39,14 @@ function ProfilePage() {
 
   if (loading) return <Loader />;
 
-  const handelDetele = async (id: string) => {
+  const handelDetele = async (id: Number) => {
     const res = await axios.post(`/api/deleteEvent`, { eventId: id });
     if (res?.data?.deletedResult?.deletedCount > 0) {
       getData();
     }
   };
   const handelEdit = (id: string) => {
-    console.log(id);
+    router.push(`/updateEvent?id=${id}`);
   };
 
   return (
@@ -163,7 +166,7 @@ interface Event {
   startDate: string;
   name: string;
   by: string;
-  eventId:string
+  eventId:Number
 }
 
 export default ProfilePage;
