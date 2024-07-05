@@ -56,11 +56,11 @@ type Event = {
   category: string;
   startDate: string;
   name: string;
-  by: string;
-  endDate: string;
-  location: string;
-  description: string;
-  eventId: string;
+  by: string,
+  endDate: string,
+  location: string,
+  description: string,
+  eventId: string,
   byEmail:string
 };
 export default GetTicket;
