@@ -125,6 +125,7 @@ interface Event {
   location:string;
   description:string;
   eventId: string;
+  byEmail:string
 }
 
 export default Page;
