@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React, { useEffect } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 import { useSession } from "next-auth/react";
@@ -11,7 +11,9 @@ type Props = {
 };
 
 function GetTicket({ event }: Props) {
-  const session = useSession()
+  const session = useSession();
+  console.log(session?.data!.user?.email);
+  console.log(event?.byEmail);
   useEffect(() => {
     // Check to see if this is a redirect back from Checkout
     const query = new URLSearchParams(window.location.search);
@@ -20,27 +22,29 @@ function GetTicket({ event }: Props) {
     }
 
     if (query.get("canceled")) {
-      console.log(
-        "Order canceled"
-      );
+      console.log("Order canceled");
     }
   }, []);
 
-  const oncheckOut = async() => {
-    const order= {
+  const oncheckOut = async () => {
+    const order = {
       eventId: event?.eventId,
       eventName: event?.name,
       eventPrice: event?.price,
-      buyer: session?.data!.user?.email || ''
-    }
-    checkoutOrder(order)
+      buyer: session?.data!.user?.email || "",
+    };
+    checkoutOrder(order);
   };
 
   return (
     <form action={oncheckOut} method="Post">
-      <button className="bg-purple-900 px-5 py-2 text-white rounded-2xl">
-        {event?.price === 0 ? "Get Ticket" : "Buy Ticket"}
-      </button>
+      {session?.data!.user?.email === event?.byEmail ? (
+        <h1 className="text-[#581C87] font-semibold">This added by you</h1>
+      ) : (
+        <button className="bg-purple-900 px-5 py-2 text-white rounded-2xl">
+          {event?.price === 0 ? "Get Ticket" : "Buy Ticket"}
+        </button>
+      )}
     </form>
   );
 }
@@ -57,5 +61,6 @@ type Event = {
   location: string;
   description: string;
   eventId: string;
+  byEmail:string
 };
 export default GetTicket;
