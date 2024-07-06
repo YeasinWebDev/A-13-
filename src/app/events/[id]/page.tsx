@@ -32,6 +32,7 @@ function Page() {
       console.error("Failed to fetch event", error);
     }
   };
+  // console.log(`${process.env.NEXT_PUBLIC_Live_URL}/events/oneEvent`)
 
   useEffect(() => {
     if (id && email) {
