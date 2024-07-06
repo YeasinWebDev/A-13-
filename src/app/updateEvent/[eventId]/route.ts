@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { ObjectId } from "mongodb";
 import { connectDb } from "@/lib/conectDb";
 
-export async function PUT(req: UpdateEventRequest, res: NextResponse) {
+export async function PUT(req: NextRequest) {
   const id = req.url.split("/updateEvent/")[1];
   const {
     name,
@@ -46,8 +46,4 @@ export async function PUT(req: UpdateEventRequest, res: NextResponse) {
   return NextResponse.json({ message: "Event updated successfully" });
 }
 
-interface UpdateEventRequest extends NextRequest {
-  query: {
-    eventId: string;
-  };
-}
+
