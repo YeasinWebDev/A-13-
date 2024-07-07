@@ -5,6 +5,9 @@ import { NextRequest, NextResponse } from "next/server";
 
 export const POST = async (request:NextRequest) => {
   const { id } = await request.json(); 
+  if (typeof id !== 'string') {
+    return NextResponse.json({ error: "Invalid event ID" }, { status: 400 });
+  }
 
   try {
     const db = await connectDb();

@@ -108,26 +108,17 @@ function EventForm({ type, eventId }: EventFormProps) {
       const loadData = async () => {
         const res = await axios.post(
           `${process.env.NEXT_PUBLIC_Live_URL}/events/oneEvent`,
-          { id: eventId },
-          {
-            headers: {
-              'Cache-Control': 'no-cache',
-              'Pragma': 'no-cache',
-              'Expires': '0',
-            },
-          }
+          { id: eventId }
         );
-        setdefultValue(res.data);
-        const startDate = res.data.startDate ? new Date(res.data.startDate) : null;
-        const endDate = res.data.endDate ? new Date(res.data.endDate) : null;
-        setStartDateValue(startDate);
-        setEndDateVaule(endDate);
-        setSelectedImage(res.data.image);
+        setdefultValue(res?.data);
+        setStartDateValue(new Date(res?.data?.startDate));
+        setEndDateVaule(new Date(res?.data?.endDate));
+        setSelectedImage(res?.data?.image);
         setLoading(false);
       };
       loadData();
     }
-  }, [eventId, type]);
+  }, [eventId]);
 
   if (loading) return <Loader />;
 
