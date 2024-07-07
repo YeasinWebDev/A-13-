@@ -109,12 +109,18 @@ function EventForm({ type, eventId }: EventFormProps) {
         { id: eventId }
       );
       setdefultValue(res?.data);
-      // setStartDateValue(new Date(res?.data?.startDate));
-      // setEndDateVaule(new Date(res?.data?.endDate));
+      const startDate = new Date(res?.data?.startDate);
+      const endDate = new Date(res?.data?.endDate);
+      if (!isNaN(startDate.getTime()) || !isNaN(endDate.getTime())) {
+        setStartDateValue(startDate);
+        setEndDateVaule(endDate);
+      } else {
+        console.error("Invalid start date");
+      }
       setSelectedImage(res?.data?.image);
       setLoading(false);
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   };
 
