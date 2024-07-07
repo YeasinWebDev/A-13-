@@ -111,11 +111,13 @@ function EventForm({ type, eventId }: EventFormProps) {
       setdefultValue(res?.data);
       const startDate = new Date(res?.data?.startDate);
       const endDate = new Date(res?.data?.endDate);
+      
       if (!isNaN(startDate.getTime()) || !isNaN(endDate.getTime())) {
         setStartDateValue(startDate);
         setEndDateVaule(endDate);
       } else {
         console.error("Invalid start date");
+        console.log(startDate, endDate);
       }
       setSelectedImage(res?.data?.image);
       setLoading(false);
