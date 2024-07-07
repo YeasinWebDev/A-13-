@@ -88,34 +88,38 @@ function EventForm({ type, eventId }: EventFormProps) {
         toast.success("Event updated successfully");
         router.push(`/profile`);
       }
-    } else{
+    } else {
       const res = await axios.post(
         `${process.env.NEXT_PUBLIC_Live_URL}/createEvent/api`,
         data
       );
-  
+
       if (res) {
         router.push(`/`);
         toast.success("Event created successfully");
       }
     }
+  };
 
+  const loadData = async () => {
+    setLoading(true);
+    try {
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_Live_URL}/events/oneEvent`,
+        { id: eventId }
+      );
+      setdefultValue(res?.data);
+      setStartDateValue(new Date(res?.data?.startDate));
+      setEndDateVaule(new Date(res?.data?.endDate));
+      setSelectedImage(res?.data?.image);
+      setLoading(false);
+    } catch (error) {
+      console.log(error)
+    }
   };
 
   useEffect(() => {
     if (type === "update") {
-      setLoading(true);
-      const loadData = async () => {
-        const res = await axios.post(
-          `${process.env.NEXT_PUBLIC_Live_URL}/events/oneEvent`,
-          { id: eventId }
-        );
-        setdefultValue(res?.data);
-        setStartDateValue(new Date(res?.data?.startDate));
-        setEndDateVaule(new Date(res?.data?.endDate));
-        setSelectedImage(res?.data?.image);
-        setLoading(false);
-      };
       loadData();
     }
   }, [eventId]);
