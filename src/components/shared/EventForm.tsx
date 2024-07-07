@@ -109,8 +109,8 @@ function EventForm({ type, eventId }: EventFormProps) {
         { id: eventId }
       );
       setdefultValue(res?.data);
-      setStartDateValue(new Date(res?.data?.startDate));
-      setEndDateVaule(new Date(res?.data?.endDate));
+      // setStartDateValue(new Date(res?.data?.startDate));
+      // setEndDateVaule(new Date(res?.data?.endDate));
       setSelectedImage(res?.data?.image);
       setLoading(false);
     } catch (error) {
