@@ -11,6 +11,7 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import Loader from "../Loader";
+import { parse } from "date-fns";
 
 function EventForm({ type, eventId }: EventFormProps) {
   const session = useSession();
@@ -109,8 +110,11 @@ function EventForm({ type, eventId }: EventFormProps) {
         { id: eventId }
       );
       setdefultValue(res?.data);
-      const startDate = new Date(res?.data?.startDate);
-      const endDate = new Date(res?.data?.endDate);
+      const startDateStr = res?.data?.startDate;
+      const endDateStr = res?.data?.endDate;
+
+      const startDate = parse(startDateStr, "EEE, MMM dd, hh:mm aa", new Date());
+      const endDate = parse(endDateStr, "EEE, MMM dd, hh:mm aa", new Date());
       
       if (!isNaN(startDate.getTime()) || !isNaN(endDate.getTime())) {
         setStartDateValue(startDate);
@@ -123,8 +127,10 @@ function EventForm({ type, eventId }: EventFormProps) {
       setLoading(false);
     } catch (error) {
       console.log(error);
+      setLoading(false); 
     }
   };
+  console.log(defultValue)
 
   useEffect(() => {
     if (type === "update") {
